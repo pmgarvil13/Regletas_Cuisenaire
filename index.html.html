@@ -1,0 +1,2173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Regletas de Cuisenaire - Tapete Manipulativo PDI | CEIP San Agustín</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --unit-size: 38px;
+      --bg-board: #f8fafc;
+      --grid-line: #e2e8f0;
+      --primary: #0284c7;
+      --primary-dark: #0369a1;
+      --header-bg: #0f172a;
+      --accent: #f59e0b;
+    }
+
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      background: #0f172a;
+      color: #1e293b;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      touch-action: none;
+    }
+
+    header {
+      background: var(--header-bg);
+      padding: 8px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: white;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+      z-index: 50;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #ef4444 0%, #facc15 50%, #2563eb 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: white;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+
+    .brand-text h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -0.4px;
+      color: #f8fafc;
+      line-height: 1.2;
+    }
+
+    .brand-text .author-meta {
+      font-size: 0.72rem;
+      color: #94a3b8;
+      font-weight: 600;
+    }
+
+    .brand-text .author-meta strong {
+      color: #38bdf8;
+      font-weight: 700;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn-pdi {
+      background: #1e293b;
+      color: #f1f5f9;
+      border: 1px solid #334155;
+      padding: 7px 12px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      touch-action: manipulation;
+      transition: all 0.15s ease;
+    }
+
+    .btn-pdi:active {
+      transform: scale(0.96);
+    }
+
+    .btn-pdi:hover {
+      background: #334155;
+      border-color: #475569;
+    }
+
+    .btn-pdi.active {
+      background: var(--primary);
+      border-color: #38bdf8;
+      color: white;
+    }
+
+    .btn-fullscreen {
+      background: #0284c7;
+      border-color: #38bdf8;
+      color: white;
+      font-weight: 800;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+    }
+
+    .btn-fullscreen:hover {
+      background: #0369a1;
+    }
+
+    .btn-situation {
+      background: #7c3aed;
+      border-color: #a78bfa;
+      color: white;
+    }
+    .btn-situation:hover {
+      background: #6d28d9;
+    }
+
+    .btn-coop {
+      background: #059669;
+      border-color: #34d399;
+      color: white;
+    }
+    .btn-coop:hover {
+      background: #047857;
+    }
+
+    .btn-danger {
+      background: #ef4444;
+      border-color: #dc2626;
+      color: white;
+    }
+    .btn-danger:hover {
+      background: #dc2626;
+    }
+
+    #toolbar-draw {
+      background: #1e293b;
+      border-top: 1px solid #334155;
+      padding: 6px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      z-index: 40;
+      font-size: 0.8rem;
+      color: #cbd5e1;
+    }
+
+    .draw-tools {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .pen-opt {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+
+    .pen-opt.active {
+      transform: scale(1.15);
+      border-color: white;
+      box-shadow: 0 0 8px rgba(255,255,255,0.4);
+    }
+
+    .pen-opt.red { background: #ef4444; }
+    .pen-opt.blue { background: #2563eb; }
+    .pen-opt.green { background: #16a34a; }
+    .pen-opt.highlighter { background: #facc15; border-radius: 6px; }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 700;
+      font-size: 0.75rem;
+      padding: 3px 10px;
+      border-radius: 20px;
+      background: #334155;
+      color: #94a3b8;
+    }
+
+    .status-badge.draw-mode {
+      background: #7c2d12;
+      color: #fdba74;
+    }
+
+    .status-badge.select-mode {
+      background: #134e4a;
+      color: #5eead4;
+    }
+
+    main {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+    }
+
+    #workspace {
+      flex: 1;
+      position: relative;
+      background-color: var(--bg-board);
+      background-image: 
+        linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+      background-size: var(--unit-size) var(--unit-size);
+      overflow: hidden;
+    }
+
+    #paint-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    #paint-canvas.drawing-active {
+      pointer-events: auto;
+      z-index: 25;
+      cursor: crosshair;
+    }
+
+    #overlay-svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    #selection-box {
+      position: absolute;
+      border: 2px dashed #0284c7;
+      background: rgba(2, 132, 199, 0.18);
+      display: none;
+      pointer-events: none;
+      z-index: 40;
+      border-radius: 4px;
+    }
+
+    #ruler {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 24px;
+      background: rgba(226, 232, 240, 0.9);
+      border-bottom: 1px solid #cbd5e1;
+      display: flex;
+      pointer-events: none;
+      z-index: 8;
+    }
+
+    .ruler-unit {
+      width: var(--unit-size);
+      height: 100%;
+      border-right: 1px dashed #94a3b8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #64748b;
+    }
+
+    .rod {
+      position: absolute;
+      box-sizing: border-box;
+      border-radius: 4px;
+      cursor: grab;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.95rem;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.2), inset 0 2px 2px rgba(255,255,255,0.4), inset 0 -2px 2px rgba(0,0,0,0.25);
+      border: 1px solid rgba(0, 0, 0, 0.22);
+      z-index: 15;
+      touch-action: none;
+    }
+
+    .rod:active {
+      cursor: grabbing;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.35);
+      z-index: 50 !important;
+    }
+
+    .rod.selected {
+      outline: 3px solid #0284c7;
+      outline-offset: 2px;
+      z-index: 30;
+    }
+
+    .rod.multi-selected {
+      outline: 3px solid #0d9488;
+      outline-offset: 2px;
+      box-shadow: 0 0 14px rgba(13, 148, 136, 0.6);
+      z-index: 35 !important;
+    }
+
+    .color-1   { background: #ffffff; color: #475569; border-color: #cbd5e1; }
+    .color-2   { background: #ef4444; color: #ffffff; }
+    .color-3   { background: #86efac; color: #14532d; }
+    .color-4   { background: #f472b6; color: #831843; }
+    .color-5   { background: #facc15; color: #713f12; }
+    .color-6   { background: #16a34a; color: #ffffff; }
+    .color-7   { background: #334155; color: #ffffff; }
+    .color-8   { background: #854d0e; color: #ffffff; }
+    .color-9   { background: #2563eb; color: #ffffff; }
+    .color-10  { background: #ea580c; color: #ffffff; }
+    
+    .color-100 { 
+      background-color: #0d9488; 
+      color: #ffffff;
+      background-image: 
+        linear-gradient(to right, rgba(255,255,255,0.22) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,0.22) 1px, transparent 1px);
+      background-size: var(--unit-size) var(--unit-size);
+      font-size: 1.5rem;
+      border: 2px solid #115e59;
+    }
+
+    .plate-counter-badge {
+      position: absolute;
+      top: -14px;
+      right: -14px;
+      background: #0f172a;
+      color: #38bdf8;
+      border: 2px solid #38bdf8;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 800;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      z-index: 60;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .plate-counter-badge .badge-val {
+      background: #0284c7;
+      color: white;
+      padding: 2px 7px;
+      border-radius: 10px;
+      font-size: 0.75rem;
+    }
+
+    .hide-numbers .rod-text { display: none; }
+
+    #palette {
+      background: #1e293b;
+      padding: 10px 16px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: center;
+      border-top: 1px solid #334155;
+      overflow-x: auto;
+      z-index: 30;
+      min-height: 70px;
+    }
+
+    .palette-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    .palette-rod {
+      height: 26px;
+      border-radius: 4px;
+      box-shadow: inset 0 1px 2px rgba(255,255,255,0.4), inset 0 -1px 2px rgba(0,0,0,0.3);
+      border: 1px solid rgba(0,0,0,0.25);
+      transition: transform 0.1s;
+    }
+
+    .palette-rod.color-100 {
+      height: 28px;
+      width: 28px !important;
+      background-size: 14px 14px;
+    }
+
+    .palette-item:active .palette-rod {
+      transform: scale(0.92);
+    }
+
+    .palette-label {
+      color: #94a3b8;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    #selection-bar {
+      position: absolute;
+      bottom: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15, 23, 42, 0.92);
+      backdrop-filter: blur(10px);
+      padding: 8px 16px;
+      border-radius: 30px;
+      display: none;
+      gap: 10px;
+      align-items: center;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+      z-index: 45;
+      border: 1px solid #334155;
+    }
+
+    #selection-bar.show { display: flex; }
+
+    .selection-info {
+      color: #f8fafc;
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding-right: 8px;
+      border-right: 1px solid #475569;
+    }
+
+    .btn-desagrupar {
+      background: #d97706;
+      border-color: #fbbf24;
+      color: white;
+      font-weight: 800;
+      display: none;
+      box-shadow: 0 0 10px rgba(251, 191, 36, 0.4);
+    }
+
+    .btn-desagrupar:hover {
+      background: #b45309;
+    }
+
+    #canje-bar {
+      position: absolute;
+      bottom: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 8px 18px;
+      border-radius: 30px;
+      display: none;
+      gap: 12px;
+      align-items: center;
+      box-shadow: 0 10px 28px rgba(0,0,0,0.5);
+      z-index: 55;
+      border: 2px solid #0d9488;
+    }
+
+    #canje-bar.show { display: flex; }
+
+    .canje-info {
+      color: #f8fafc;
+      font-weight: 800;
+      font-size: 0.88rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding-right: 10px;
+      border-right: 1px solid #334155;
+    }
+
+    .canje-badge-sum {
+      background: #0284c7;
+      color: white;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 0.78rem;
+    }
+
+    .btn-exec-canje {
+      background: #0d9488;
+      border-color: #2dd4bf;
+      color: white;
+      font-weight: 800;
+      box-shadow: 0 0 12px rgba(45, 212, 191, 0.4);
+      animation: pulse-canje 2s infinite;
+    }
+
+    .btn-exec-canje:hover {
+      background: #0f766e;
+    }
+
+    @keyframes pulse-canje {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.04); }
+    }
+
+    footer {
+      background: #090d16;
+      border-top: 1px solid #1e293b;
+      padding: 6px 18px;
+      font-size: 0.72rem;
+      color: #64748b;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      z-index: 50;
+    }
+
+    footer .author-badge {
+      color: #cbd5e1;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    footer .author-badge strong {
+      color: #38bdf8;
+    }
+
+    footer .license a {
+      color: #94a3b8;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    footer .license a:hover {
+      color: #e2e8f0;
+      text-decoration: underline;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.82);
+      backdrop-filter: blur(5px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 16px;
+    }
+
+    .modal-card {
+      background: #ffffff;
+      border-radius: 18px;
+      width: 100%;
+      max-width: 920px;
+      max-height: 88vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 24px 48px rgba(0,0,0,0.45);
+      overflow: hidden;
+    }
+
+    .modal-header {
+      background: #1e293b;
+      color: white;
+      padding: 14px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #334155;
+    }
+
+    .modal-header h2 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-close {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      font-size: 1.6rem;
+      cursor: pointer;
+      line-height: 1;
+      padding: 2px 6px;
+    }
+
+    .btn-close:hover { color: #f8fafc; }
+
+    .modal-filters {
+      background: #f1f5f9;
+      padding: 10px 22px;
+      display: flex;
+      gap: 8px;
+      border-bottom: 1px solid #e2e8f0;
+      overflow-x: auto;
+    }
+
+    .filter-btn {
+      background: white;
+      border: 1px solid #cbd5e1;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #475569;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s;
+    }
+
+    .filter-btn:hover { background: #e2e8f0; }
+
+    .filter-btn.active {
+      background: #0284c7;
+      color: white;
+      border-color: #0284c7;
+    }
+
+    .filter-btn.active-coop {
+      background: #059669;
+      color: white;
+      border-color: #059669;
+    }
+
+    .modal-content {
+      padding: 20px 24px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .situation-card, .coop-card {
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 16px;
+      background: #ffffff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: border-color 0.15s;
+    }
+
+    .situation-card:hover, .coop-card:hover {
+      border-color: #94a3b8;
+    }
+
+    .situation-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .situation-title-block {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .level-badge {
+      background: #e0f2fe;
+      color: #0369a1;
+      font-size: 0.68rem;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 12px;
+      text-transform: uppercase;
+    }
+
+    .situation-title {
+      font-size: 0.98rem;
+      font-weight: 800;
+      color: #0f172a;
+    }
+
+    .situation-tags {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .situation-tag {
+      font-size: 0.7rem;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 6px;
+      text-transform: uppercase;
+    }
+
+    .tag-suma { background: #dcfce7; color: #15803d; }
+    .tag-resta { background: #fee2e2; color: #b91c1c; }
+    .tag-multi { background: #fef3c7; color: #b45309; }
+    .tag-divi { background: #dbeafe; color: #1d4ed8; }
+
+    .tag-124 { background: #e0e7ff; color: #3730a3; }
+    .tag-lapices { background: #fef3c7; color: #92400e; }
+    .tag-folio { background: #ecfdf5; color: #065f46; }
+
+    .coop-instruction-box {
+      background: #f8fafc;
+      border-left: 4px solid #059669;
+      padding: 8px 12px;
+      border-radius: 0 8px 8px 0;
+      font-size: 0.8rem;
+      color: #1e293b;
+    }
+
+    .coop-instruction-box strong {
+      color: #047857;
+    }
+
+    .situation-story {
+      font-size: 0.88rem;
+      color: #334155;
+      line-height: 1.45;
+    }
+
+    .situation-questions {
+      background: #f8fafc;
+      border-left: 3px solid #0284c7;
+      padding: 8px 12px;
+      font-size: 0.8rem;
+      color: #0f172a;
+      border-radius: 0 6px 6px 0;
+    }
+
+    .situation-questions strong {
+      color: #0369a1;
+    }
+
+    .situation-math {
+      font-size: 0.76rem;
+      color: #64748b;
+      font-weight: 700;
+    }
+
+    .extra-challenge-details {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 0.8rem;
+      color: #78350f;
+    }
+
+    .extra-challenge-details summary {
+      cursor: pointer;
+      font-weight: 800;
+      color: #b45309;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .extra-challenge-content {
+      margin-top: 8px;
+      line-height: 1.4;
+    }
+
+    .card-footer-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .btn-load-situation {
+      background: #0284c7;
+      color: white;
+      border: none;
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.15s;
+    }
+
+    .btn-load-situation:hover {
+      background: #0369a1;
+    }
+
+    .btn-load-coop {
+      background: #059669;
+    }
+    .btn-load-coop:hover {
+      background: #047857;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <div class="brand-icon">C</div>
+      <div class="brand-text">
+        <h1>Regletas de Cuisenaire · Tapete PDI</h1>
+        <div class="author-meta">3º Ed. Primaria | Docente: <strong>Pedro Manuel García Vilar</strong> · CEIP San Agustín</div>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <button class="btn-pdi btn-fullscreen" id="btn-fullscreen" title="Ampliar a pantalla completa en la Pizarra Digital">
+        ⛶ Pantalla Completa PDI
+      </button>
+
+      <button class="btn-pdi btn-coop" id="btn-open-coop">
+        🤝 Retos Cooperativos (12)
+      </button>
+
+      <button class="btn-pdi btn-situation" id="btn-open-situations">
+        📖 Situaciones Cotidianas (20)
+      </button>
+
+      <button class="btn-pdi" id="btn-toggle-numbers">
+        🔢 <span id="label-numbers">Ocultar Números</span>
+      </button>
+
+      <button class="btn-pdi active" id="btn-toggle-grid">
+        📏 Cuadrícula
+      </button>
+
+      <button class="btn-pdi btn-danger" id="btn-clear-board">
+        🗑️ Borrar Tapete
+      </button>
+    </div>
+  </header>
+
+  <div id="toolbar-draw">
+    <div class="draw-tools">
+      <span style="font-weight: 700; color: #f8fafc; margin-right: 4px;">Herramientas PDI:</span>
+      <button class="btn-pdi active" id="btn-mode-manipulate">✋ Mover Regletas</button>
+      <button class="btn-pdi" id="btn-mode-select">🔲 Enmarcar / Canjear</button>
+      <button class="btn-pdi" id="btn-mode-pen">✏️ Lápiz Anotador</button>
+
+      <div style="display: inline-flex; align-items: center; gap: 6px; margin-left: 10px;">
+        <span class="pen-opt red active" data-color="#ef4444" title="Bolígrafo Rojo"></span>
+        <span class="pen-opt blue" data-color="#2563eb" title="Bolígrafo Azul"></span>
+        <span class="pen-opt green" data-color="#16a34a" title="Bolígrafo Verde"></span>
+        <span class="pen-opt highlighter" data-color="rgba(250, 204, 21, 0.45)" title="Fluorescente Amarillo"></span>
+      </div>
+
+      <button class="btn-pdi" id="btn-pen-eraser" style="margin-left: 6px;">🧹 Goma Tinta</button>
+      <button class="btn-pdi" id="btn-pen-clear">Limpiar Trazos</button>
+    </div>
+
+    <div class="status-badge" id="status-badge">
+      <span>●</span> <span id="status-text">Modo Regletas: Manipulación Activa</span>
+    </div>
+  </div>
+
+  <main>
+    <div id="workspace">
+      <div id="ruler"></div>
+      <div id="selection-box"></div>
+      <svg id="overlay-svg"></svg>
+      <canvas id="paint-canvas"></canvas>
+    </div>
+
+    <div id="selection-bar">
+      <span class="selection-info" id="selected-info">Regleta 5 (Amarilla)</span>
+      <button class="btn-pdi btn-desagrupar" id="btn-desagrupar-100">💥 Desagrupar</button>
+      <button class="btn-pdi" id="btn-rod-rotate">↻ Girar</button>
+      <button class="btn-pdi" id="btn-rod-duplicate">+ Duplicar</button>
+      <button class="btn-pdi btn-danger" id="btn-rod-delete">Eliminar</button>
+    </div>
+
+    <div id="canje-bar">
+      <div class="canje-info">
+        <span id="canje-count-text">10 regletas seleccionadas</span>
+        <span class="canje-badge-sum" id="canje-sum-text">Suma: 100</span>
+      </div>
+      <button class="btn-pdi btn-exec-canje" id="btn-do-canje">✨ Canjear por Placa 100</button>
+      <button class="btn-pdi btn-danger" id="btn-delete-selection">🗑 Eliminar grupo</button>
+      <button class="btn-pdi" id="btn-cancel-selection">✖ Soltar</button>
+    </div>
+  </main>
+
+  <div id="palette"></div>
+
+  <footer>
+    <div class="author-badge">
+      <span>Recurso Educativo Abierto (REA) · Diseñado por: <strong>Pedro Manuel García Vilar</strong> · CEIP San Agustín (El Ejido / Almería)</span>
+    </div>
+    <div class="license">
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es" target="_blank" rel="noopener noreferrer">
+        <span>Licencia CC BY-NC-SA 4.0 Internacional (Uso educativo no comercial)</span>
+      </a>
+    </div>
+  </footer>
+
+  <div class="modal-backdrop" id="modal-situations">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>📖 Situaciones Cotidianas de Apoyo para 3º de Primaria</h2>
+        <button class="btn-close" id="btn-close-modal">&times;</button>
+      </div>
+
+      <div class="modal-filters">
+        <button class="filter-btn active" data-filter="all">Todas (20)</button>
+        <button class="filter-btn" data-filter="suma">➕ Suma (5)</button>
+        <button class="filter-btn" data-filter="resta">➖ Resta (5)</button>
+        <button class="filter-btn" data-filter="multiplicacion">✖️ Multiplicación (5)</button>
+        <button class="filter-btn" data-filter="division">➗ División (5)</button>
+      </div>
+
+      <div class="modal-content" id="situations-list"></div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="modal-coop">
+    <div class="modal-card">
+      <div class="modal-header" style="background: #064e3b; border-bottom: 1px solid #047857;">
+        <h2>🤝 Cápsulas de Aprendizaje Cooperativo (15-20 min)</h2>
+        <button class="btn-close" id="btn-close-coop-modal">&times;</button>
+      </div>
+
+      <div class="modal-filters">
+        <button class="filter-btn active-coop" data-coop-filter="all">Todos los Retos (12)</button>
+        <button class="filter-btn" data-coop-filter="124">👥 1-2-4 (4)</button>
+        <button class="filter-btn" data-coop-filter="lapices">✏️ Lápices al Centro (4)</button>
+        <button class="filter-btn" data-coop-filter="folio">🔄 Folio Giratorio (4)</button>
+      </div>
+
+      <div class="modal-content" id="coop-list"></div>
+    </div>
+  </div>
+
+  <script>
+    const ROD_DEFINITIONS = [
+      { value: 1,   name: 'Blanca',          className: 'color-1' },
+      { value: 2,   name: 'Roja',            className: 'color-2' },
+      { value: 3,   name: 'Verde Claro',     className: 'color-3' },
+      { value: 4,   name: 'Rosa',            className: 'color-4' },
+      { value: 5,   name: 'Amarilla',        className: 'color-5' },
+      { value: 6,   name: 'Verde Oscuro',    className: 'color-6' },
+      { value: 7,   name: 'Negra',           className: 'color-7' },
+      { value: 8,   name: 'Marrón',          className: 'color-8' },
+      { value: 9,   name: 'Azul',            className: 'color-9' },
+      { value: 10,  name: 'Naranja',         className: 'color-10' },
+      { value: 100, name: 'Centena (Placa)', className: 'color-100', isPlate: true }
+    ];
+
+    const SITUACIONES_DATA = [
+      { id: 's_add_1', op: 'suma', level: 'Nivel 1 (Básico)', title: 'Los lápices del estuche escolar', tag: 'Suma directa sin cambio', tagClass: 'tag-suma', story: 'En el estuche tienes 4 lápices de colores y tu compañera de mesa te presta 3 rotuladores. ¿Cuántos útiles de escribir tienes en total sobre la mesa?', questions: '«Juntamos la regleta rosa (4) y la verde claro (3). ¿Qué regleta única cubre exactamente la misma longitud?»', math: 'Expresión: 4 + 3 = 7', setup: [ { val: 4, x: 2, y: 2 }, { val: 3, x: 6, y: 2 } ] },
+      { id: 's_add_2', op: 'suma', level: 'Nivel 2 (Complemento a 10)', title: 'Los amigos del 10: Merienda en el recreo', tag: 'Descomposición del 10', tagClass: 'tag-suma', story: 'En una bandeja del comedor caben 10 piezas de fruta. Si ya hemos puesto 7 plátanos, ¿cuántas manzanas necesitamos para llenar completamente la bandeja?', questions: '«Coloca la regleta negra (7). ¿Qué regleta necesitas añadir para igualar la longitud de la regleta naranja (10)?»', math: 'Expresión: 7 + 3 = 10', setup: [ { val: 10, x: 2, y: 2 }, { val: 7, x: 2, y: 3 } ] },
+      { id: 's_add_3', op: 'suma', level: 'Nivel 3 (Salto de decena)', title: 'La carrera de relevos en Educación Física', tag: 'Paso a la decena (8 + 5)', tagClass: 'tag-suma', story: 'En la pista del cole, el primer corredor avanza 8 metros y el segundo da un relevo de 5 metros más. ¿A qué distancia de la salida se encuentran?', questions: '«Unimos la regleta marrón (8) y la amarilla (5). Como sobrepasa el 10, ¿con qué regleta naranja (10) y qué otra pieza igualamos el tren?»', math: 'Expresión: 8 + 5 = 10 + 3 = 13', setup: [ { val: 8, x: 2, y: 2 }, { val: 5, x: 10, y: 2 }, { val: 10, x: 2, y: 3 } ] },
+      { id: 's_add_4', op: 'suma', level: 'Nivel 4 (Tres sumandos)', title: 'Los maceteros del patio del colegio', tag: 'Propiedad asociativa', tagClass: 'tag-suma', story: 'Para decorar la entrada del centro traemos 3 geranios el lunes, 6 petunias el martes y 4 claveles el miércoles. ¿Cuántas plantas tenemos en total?', questions: '«Coloca las tres regletas seguidas (3 + 6 + 4). ¿Qué ocurre si agrupas primero el 6 y el 4 para hacer una decena fácil?»', math: 'Expresión: 3 + 6 + 4 = 3 + 10 = 13', setup: [ { val: 3, x: 2, y: 2 }, { val: 6, x: 5, y: 2 }, { val: 4, x: 11, y: 2 } ] },
+      { id: 's_add_5', op: 'suma', level: 'Nivel 5 (Doble decena)', title: 'Las garrafas de agua para el huerto escolar', tag: 'Composición hasta 24', tagClass: 'tag-suma', story: 'Para regar las hortalizas usamos una garrafa de 9 litros de agua y otra de 8 litros, y nos traen un bidón pequeño de 7 litros más. ¿Cuántos litros hemos acumulado?', questions: '«Junta las regletas de 9, 8 y 7. ¿Cuántas regletas naranjas de 10 completas caben debajo y qué regleta final se necesita?»', math: 'Expresión: 9 + 8 + 7 = 24 (Dos naranjas de 10 y una rosa de 4)', setup: [ { val: 9, x: 2, y: 2 }, { val: 8, x: 11, y: 2 }, { val: 7, x: 19, y: 2 } ] },
+      { id: 's_sub_1', op: 'resta', level: 'Nivel 1 (Quitar directo)', title: 'Las pegatinas del álbum', tag: 'Resta directa básica', tagClass: 'tag-resta', story: 'Tenías una tira con 8 pegatinas de animales y le regalas 3 a tu hermano pequeño. ¿Cuántas pegatinas te quedan?', questions: '«Pon la regleta marrón (8) arriba y la verde claro (3) debajo alineada a la izquierda. Observa la sombra amarilla: ¿qué pieza encaja?»', math: 'Expresión: 8 - 3 = 5', setup: [ { val: 8, x: 2, y: 2 }, { val: 3, x: 2, y: 3 } ] },
+      { id: 's_sub_2', op: 'resta', level: 'Nivel 2 (Complemento / Falta)', title: 'La compra del cómic en la librería', tag: 'Complemento de precio', tagClass: 'tag-resta', story: 'Un cómic cuesta 9 € en la papelería del barrio. Si has abierto la hucha y solo tienes 4 €, ¿cuánto dinero te falta ahorrar todavía?', questions: '«Si la meta es la regleta azul (9) y ya tienes la rosa (4), ¿cuántos pasos te faltan para llegar al final del camino?»', math: 'Expresión: 9 - 4 = 5 (4 + 5 = 9)', setup: [ { val: 9, x: 2, y: 2 }, { val: 4, x: 2, y: 3 } ] },
+      { id: 's_sub_3', op: 'resta', level: 'Nivel 3 (Comparación)', title: 'Los saltos de longitud en el recreo', tag: 'Comparación de longitudes', tagClass: 'tag-resta', story: 'Lucía ha saltado 12 decímetros en el foso de arena y Hugo ha alcanzado 7 decímetros. ¿Cuántos decímetros de ventaja le ha sacado Lucía a Hugo?', questions: '«Forma el 12 de Lucía con una naranja (10) y una roja (2). Abajo pon la negra (7) de Hugo. ¿Qué trozo de pista recorrió Lucía en solitario?»', math: 'Expresión: 12 - 7 = 5', setup: [ { val: 10, x: 2, y: 2 }, { val: 2, x: 12, y: 2 }, { val: 7, x: 2, y: 3 } ] },
+      { id: 's_sub_4', op: 'resta', level: 'Nivel 4 (Salto de decena / Llevada)', title: 'Los bombones de la caja de regalo', tag: 'Resta con cambio (15 - 8)', tagClass: 'tag-resta', story: 'En una caja había 15 bombones artesanos. En la fiesta de cumpleaños se comen 8 bombones entre todos. ¿Cuántos bombones quedan dentro de la caja?', questions: '«Coloca el 15 arriba (10 + 5) y debajo el 8. Mira el hueco restante: ¿qué regleta única encaja exactamente para taparlo?»', math: 'Expresión: 15 - 8 = 7', setup: [ { val: 10, x: 2, y: 2 }, { val: 5, x: 12, y: 2 }, { val: 8, x: 2, y: 3 } ] },
+      { id: 's_sub_5', op: 'resta', level: 'Nivel 5 (Doble decena)', title: 'El viaje en autobús por la costa', tag: 'Diferencia amplia (20 - 13)', tagClass: 'tag-resta', story: 'El trayecto en autobús hasta la playa mide 20 kilómetros. Tras una parada técnica en la gasolinera ya hemos recorrido 13 kilómetros. ¿Cuántos nos faltan?', questions: '«Pon dos regletas naranjas arriba (10 + 10 = 20). Abajo coloca una naranja y una verde claro (10 + 3 = 13). ¿Qué regleta cubre la distancia que queda?»', math: 'Expresión: 20 - 13 = 7', setup: [ { val: 10, x: 2, y: 2 }, { val: 10, x: 12, y: 2 }, { val: 10, x: 2, y: 3 }, { val: 3, x: 12, y: 3 } ] },
+      { id: 's_mul_1', op: 'multiplicacion', level: 'Nivel 1 (Tabla del 2 / Dobles)', title: 'Las parejas de baile de la fiesta escolar', tag: 'Suma repetida de 2 en 2', tagClass: 'tag-multi', story: 'En el baile de fin de curso se colocan 4 parejas de niños y niñas. ¿Cuántos alumnos están bailando en total?', questions: '«Coloca 4 regletas rojas (2) seguidas. ¿Qué regleta única cubre la misma longitud?»', math: 'Expresión: 4 × 2 = 2 + 2 + 2 + 2 = 8', setup: [ { val: 2, x: 2, y: 2 }, { val: 2, x: 4, y: 2 }, { val: 2, x: 6, y: 2 }, { val: 2, x: 8, y: 2 } ] },
+      { id: 's_mul_2', op: 'multiplicacion', level: 'Nivel 2 (Área y Conmutativa)', title: 'El huerto de lechugas del colegio', tag: 'Modelo de matriz (3 × 5)', tagClass: 'tag-multi', story: 'En el huerto plantamos 3 filas de lechugas y en cada fila ponemos 5 plantones. ¿Cuántas lechugas cosecharemos?', questions: '«Apila tres regletas amarillas (5) formando un rectángulo. ¿Qué ocurre si giras el bloque? ¿3 × 5 es igual a 5 × 3?»', math: 'Expresión: 3 × 5 = 15 (y 5 × 3 = 15)', setup: [ { val: 5, x: 2, y: 2 }, { val: 5, x: 2, y: 3 }, { val: 5, x: 2, y: 4 } ] },
+      { id: 's_mul_3', op: 'multiplicacion', level: 'Nivel 3 (Sobres de cromos)', title: 'Los sobres de cromos del quiosco', tag: 'Suma repetida (4 × 6)', tagClass: 'tag-multi', story: 'Compramos 4 sobres de cromos en la papelería. Si dentro de cada sobre vienen 6 cromos, ¿cuántos tenemos para pegar?', questions: '«Alinea 4 regletas verdes oscuras (6). ¿Cuántas decenas (regletas de 10) y unidades sueltas necesitas para igualar el tren?»', math: 'Expresión: 4 × 6 = 24 (10 + 10 + 4)', setup: [ { val: 6, x: 2, y: 2 }, { val: 6, x: 8, y: 2 }, { val: 6, x: 14, y: 2 }, { val: 6, x: 20, y: 2 } ] },
+      { id: 's_mul_4', op: 'multiplicacion', level: 'Nivel 4 (Packs y Cajas)', title: 'Los packs de zumos para la merienda', tag: 'Multiplicación (5 × 4)', tagClass: 'tag-multi', story: 'Para la excursión compramos 5 packs de zumo de naranja. En cada pack vienen 4 botellines individuales. ¿Cuántos zumos hay en total?', questions: '«Coloca 5 regletas rosas (4) en fila o apiladas. Comprueba con regletas naranjas cuántas decenas exactas se forman.»', math: 'Expresión: 5 × 4 = 20 (Dos regletas de 10)', setup: [ { val: 4, x: 2, y: 2 }, { val: 4, x: 6, y: 2 }, { val: 4, x: 10, y: 2 }, { val: 4, x: 14, y: 2 }, { val: 4, x: 18, y: 2 } ] },
+      { id: 's_mul_5', op: 'multiplicacion', level: 'Nivel 5 (Tabla amplia)', title: 'Las baldosas del patio de recreo', tag: 'Área cuadrangular (3 × 8)', tagClass: 'tag-multi', story: 'Para pintar un juego de rayuela en el suelo, el conserje hace una cuadrícula de 3 filas de baldosas con 8 baldosas en cada fila. ¿Cuántas baldosas pinta?', questions: '«Coloca 3 regletas marrones (8) seguidas. ¿A qué equivale? Comprueba que dos de 10 y una de 4 miden exactamente igual.»', math: 'Expresión: 3 × 8 = 24', setup: [ { val: 8, x: 2, y: 2 }, { val: 8, x: 10, y: 2 }, { val: 8, x: 18, y: 2 } ] },
+      { id: 's_div_1', op: 'division', level: 'Nivel 1 (Exacta / Mitades)', title: 'Reparto de pinturas entre dos amigos', tag: 'División exacta entre 2', tagClass: 'tag-divi', story: 'Tenemos una caja con 8 ceras de cera y queremos repartirlas a partes iguales entre dos compañeros de clase. ¿Cuántas ceras recibe cada uno?', questions: '«Coloca la marrón (8) arriba. Debajo, ¿cuántas regletas de 4 caben exactamente sin que sobre ningún hueco?»', math: 'Expresión: 8 ÷ 2 = 4 (Resto = 0)', setup: [ { val: 8, x: 2, y: 2 }, { val: 4, x: 2, y: 3 }, { val: 4, x: 6, y: 3 } ] },
+      { id: 's_div_2', op: 'division', level: 'Nivel 2 (Exacta / Grupos de 3)', title: 'Los equipos para el juego de relevos', tag: 'División exacta entre 3', tagClass: 'tag-divi', story: 'En la clase somos 12 alumnos en el patio y la maestra dice que formemos equipos de 3 niños. ¿Cuántos equipos completos podemos formar?', questions: '«Arriba pon una naranja (10) y una roja (2) para hacer 12. Abajo ve encajando regletas de 3: ¿cuántas caben en total?»', math: 'Expresión: 12 ÷ 3 = 4 (Resto = 0)', setup: [ { val: 10, x: 2, y: 2 }, { val: 2, x: 12, y: 2 }, { val: 3, x: 2, y: 3 }, { val: 3, x: 5, y: 3 }, { val: 3, x: 8, y: 3 }, { val: 3, x: 11, y: 3 } ] },
+      { id: 's_div_3', op: 'division', level: 'Nivel 3 (Resto mínimo)', title: 'Las pegatinas compartidas en el recreo', tag: 'División con resto 1', tagClass: 'tag-divi', story: 'Tienes 11 pegatinas brillantes y quieres repartirlas en 2 sobres iguales para dos amigos. ¿Cuántas pegatinas van en cada sobre y cuántas sobran?', questions: '«Arriba pon el 11 (10 + 1). Abajo coloca dos amarillas (5). ¿Qué pieza cabe en el hueco sobrante? La blanca (1), que es el resto.»', math: 'Expresión: 11 = (2 × 5) + 1 -> Cociente: 5, Resto: 1', setup: [ { val: 10, x: 2, y: 2 }, { val: 1, x: 12, y: 2 }, { val: 5, x: 2, y: 3 }, { val: 5, x: 7, y: 3 } ] },
+      { id: 's_div_4', op: 'division', level: 'Nivel 4 (Contención de 4 en 14)', title: 'Las ruedas para construir coches de juguete', tag: 'División entera con resto', tagClass: 'tag-divi', story: 'En el taller de plástica tenemos 14 ruedas de plástico. Cada coche de juguete necesita exactamente 4 ruedas. ¿Cuántos coches completos podemos montar?', questions: '«El dividendo es 14 (10 + 4). Encaja regletas rosas (4) debajo: ¿cuántas caben completas? ¿Por qué la cuarta no cabe?»', math: 'Expresión: 14 = (3 × 4) + 2 -> Cociente: 3 coches, Resto: 2 ruedas', setup: [ { val: 10, x: 2, y: 2 }, { val: 4, x: 12, y: 2 }, { val: 4, x: 2, y: 3 }, { val: 4, x: 6, y: 3 }, { val: 4, x: 10, y: 3 } ] },
+      { id: 's_div_5', op: 'division', level: 'Nivel 5 (Cajas de hortalizas)', title: 'Las cajas de pimientos del almacén', tag: 'División entera (17 ÷ 5)', tagClass: 'tag-divi', story: 'Recogemos 17 kilos de pimientos en el huerto. Los empaquetamos en cajas donde caben exactamente 5 kilos. ¿Cuántas cajas llenamos y cuántos kilos sobran?', questions: '«El dividendo es 17 (10 + 7). Encaja regletas amarillas (5): caben 3 cajas completas (15). El hueco restante (2) es el resto que sobra.»', math: 'Expresión: 17 = (3 × 5) + 2 -> Cociente: 3, Resto: 2', setup: [ { val: 10, x: 2, y: 2 }, { val: 7, x: 12, y: 2 }, { val: 5, x: 2, y: 3 }, { val: 5, x: 7, y: 3 }, { val: 5, x: 12, y: 3 } ] }
+    ];
+
+    const RETOS_COOP_DATA = [
+      {
+        id: 'c_124_1',
+        struct: '124',
+        structName: 'Estructura 1-2-4',
+        title: 'Tres caminos para componer 45',
+        tag: 'Descomposición Flexible',
+        tagClass: 'tag-124',
+        instruction: 'Fase 1 (1 min): Piensa y monta en tu mesa 45 sin usar solo regletas de 10. | Fase 2 (2 min): Con tu pareja, comparad y eliminad repetidas. | Fase 4 (3 min): El equipo elige 3 composiciones diferentes para la PDI.',
+        story: 'El número 45 puede formarse de muchas maneras. Vuestro equipo debe consensuar 3 formas distintas usando regletas variadas.',
+        questions: '«¿Habéis usado regletas de 5? ¿Se pueden sustituir dos decenas por cuatro regletas amarillas?»',
+        math: 'Objetivo: 45 = 10+10+10+10+5 = 10+10+5+5+5+5+5...',
+        extra: '🔥 Reto Extra: ¿Seríais capaces de formar 45 usando exactamente 7 regletas y que ninguna de ellas sea de color naranja (10)?',
+        setup: [
+          { val: 10, x: 2, y: 2 }, { val: 10, x: 12, y: 2 }, { val: 10, x: 22, y: 2 },
+          { val: 10, x: 32, y: 2 }, { val: 5,  x: 42, y: 2 }
+        ]
+      },
+      {
+        id: 'c_124_2',
+        struct: '124',
+        structName: 'Estructura 1-2-4',
+        title: 'Estrategias de resta: 52 − 27',
+        tag: 'Cálculo por Descomposición',
+        tagClass: 'tag-124',
+        instruction: 'Fase 1: Cada alumno resuelve 52 − 27 en mesa. | Fase 2: Comprobad si habéis usado la misma estrategia (quitar hacia atrás vs. escalera). | Fase 4: Preparad al portavoz para defender dos estrategias distintas.',
+        story: 'Para calcular 52 − 27 existen varios atajos mentales. Buscad en el equipo dos estrategias diferentes que lleguen al mismo resultado.',
+        questions: '«¿Quién ha bajado primero al 50 y luego al 30? ¿Quién ha subido sumando desde el 27 hasta el 52?»',
+        math: 'Estrategia A: 52 - 20 - 2 - 5 = 25 | Estrategia B: Del 27 al 30 (+3), al 50 (+20), al 52 (+2) = 25',
+        extra: '🔥 Reto Extra: ¿Cómo resolveríais esta resta sumando 3 a ambos números para que el sustraendo sea 30 exactos (55 − 30)? Explicad por qué funciona.',
+        setup: [
+          { val: 10, x: 2, y: 2 }, { val: 10, x: 12, y: 2 }, { val: 10, x: 22, y: 2 },
+          { val: 10, x: 32, y: 2 }, { val: 10, x: 42, y: 2 }, { val: 2, x: 52, y: 2 },
+          { val: 10, x: 2, y: 4 }, { val: 10, x: 12, y: 4 }, { val: 7, x: 22, y: 4 }
+        ]
+      },
+      {
+        id: 'c_124_3',
+        struct: '124',
+        structName: 'Estructura 1-2-4',
+        title: 'Desarmar la tabla del 7: 6 × 7',
+        tag: 'Propiedad Distributiva',
+        tagClass: 'tag-124',
+        instruction: 'Fase 1: Representa 6 veces el 7. | Fase 2: Dividid el bloque en dos tablas más fáciles de recordar. | Fase 4: Acordad qué partición es la más rápida para calcular sin memorizar.',
+        story: 'La tabla del 7 resulta difícil si intentamos memorizarla de carrerilla. ¿En qué dos tablas amables (como la del 5 y la del 2) podemos partir el 7?',
+        questions: '«6 regletas de 7 miden lo mismo que 6 de 5 juntas con 6 de 2. ¿Cuánto es 30 + 12?»',
+        math: '6 × 7 = (6 × 5) + (6 × 2) = 30 + 12 = 42',
+        extra: '🔥 Reto Extra: ¿Y si partís el 6 en lugar del 7? (3 veces 7 + 3 veces 7). ¿Es más fácil hacer el doble de 21?',
+        setup: [
+          { val: 7, x: 2, y: 2 }, { val: 7, x: 9, y: 2 }, { val: 7, x: 16, y: 2 },
+          { val: 7, x: 23, y: 2 }, { val: 7, x: 30, y: 2 }, { val: 7, x: 37, y: 2 }
+        ]
+      },
+      {
+        id: 'c_124_4',
+        struct: '124',
+        structName: 'Estructura 1-2-4',
+        title: 'El banco de canjes: Formar 230',
+        tag: 'Canje de Centenas',
+        tagClass: 'tag-124',
+        instruction: 'Fase 1: Forma 230 con las regletas que prefieras. | Fase 2: Comparad cuántas placas de 100 y regletas naranjas habéis usado. | Fase 4: Encontrad la forma de representar 230 con el menor número de piezas posibles y con el mayor número posible.',
+        story: 'Tenemos un banco de regletas y necesitamos reunir exactamente 230 unidades. ¿Cuántas combinaciones de centenas y decenas podéis descubrir?',
+        questions: '«¿Podemos usar 2 placas de 100 y 3 naranjas? ¿Qué pasa si cambiamos una placa por diez naranjas?»',
+        math: '230 = 2 Centenas + 3 Decenas = 1 Centena + 13 Decenas = 23 Decenas',
+        extra: '🔥 Reto Extra: Si solo tuvierais regletas amarillas (5), ¿cuántas regletas necesitaríais en total para reunir 230? (Buscad una pista con la de 10).',
+        setup: [
+          { val: 100, x: 2, y: 2 }, { val: 100, x: 2, y: 2 },
+          { val: 10,  x: 14, y: 2 }, { val: 10,  x: 24, y: 2 }, { val: 10,  x: 34, y: 2 }
+        ]
+      },
+      {
+        id: 'c_lap_1',
+        struct: 'lapices',
+        structName: 'Lápices al Centro',
+        title: 'Compra en la librería y vuelta del 100',
+        tag: 'Problema de 2 Pasos',
+        tagClass: 'tag-lapices',
+        instruction: '✋ LÁPICES EN EL CENTRO DE LA MESA: Nadie escribe. Dialogad: ¿Qué operación hacemos primero? ¿Qué regleta representa el dinero que entregamos? Cuando todos lo entiendan, ¡lápices a la mano y redactamos!',
+        story: 'Compramos un libro de lectura por 34 € y un cuaderno de dibujo por 28 €. Pagamos en caja con un billete de 100 € (Placa de 100). ¿Cuánto dinero nos devuelven de cambio?',
+        questions: '«Paso 1: Juntar el gasto (34 + 28). Paso 2: Comparar con la placa de 100 y ver la diferencia que sobra.»',
+        math: 'Paso 1: 34 + 28 = 62 € gastados. Paso 2: 100 - 62 = 38 € de vuelta.',
+        extra: '🔥 Reto Extra: Si nos devuelven el cambio solo en billetes de 10 € y monedas de 2 €, ¿cuántas regletas de 10 y de 2 nos darían exactamente?',
+        setup: [
+          { val: 100, x: 2, y: 2 },
+          { val: 10, x: 2, y: 13 }, { val: 10, x: 12, y: 13 }, { val: 10, x: 22, y: 13 }, { val: 4, x: 32, y: 13 },
+          { val: 10, x: 2, y: 15 }, { val: 10, x: 12, y: 15 }, { val: 8, x: 22, y: 15 }
+        ]
+      },
+      {
+        id: 'c_lap_2',
+        struct: 'lapices',
+        structName: 'Lápices al Centro',
+        title: 'Pasajeros en la parada de autobús',
+        tag: 'Suma y Resta Encadenada',
+        tagClass: 'tag-lapices',
+        instruction: '✋ LÁPICES EN EL CENTRO: Debatid la historia. ¿Qué cambia primero en el tren de regletas? ¿Añadimos o quitamos? Todos los miembros del equipo deben saber explicar por qué.',
+        story: 'Un autobús interurbano sale con 42 personas. En la estación de Almería suben 15 viajeros nuevos, pero en la siguiente parada bajan 19. ¿Cuántos pasajeros viajan ahora en el autobús?',
+        questions: '«¿Es mejor sumar primero 42 + 15 y luego restar 19, o pensar qué diferencia hay entre los que suben y bajan?»',
+        math: '42 + 15 = 57 pasajeros; 57 - 19 = 38 pasajeros finales.',
+        extra: '🔥 Reto Extra: Como subieron 15 y bajaron 19... ¿bajaron en realidad 4 personas más de las que subieron? Comprobad si 42 − 4 da el mismo resultado.',
+        setup: [
+          { val: 10, x: 2, y: 2 }, { val: 10, x: 12, y: 2 }, { val: 10, x: 22, y: 2 }, { val: 10, x: 32, y: 2 }, { val: 2, x: 42, y: 2 },
+          { val: 10, x: 2, y: 4 }, { val: 5, x: 12, y: 4 }
+        ]
+      },
+      {
+        id: 'c_lap_3',
+        struct: 'lapices',
+        structName: 'Lápices al Centro',
+        title: 'Los zumos para la fiesta escolar',
+        tag: 'Multiplicación + Suma',
+        tagClass: 'tag-lapices',
+        instruction: '✋ LÁPICES EN EL CENTRO: Observad el tapete. ¿Qué parte representa la multiplicación de los packs y qué parte los zumos sueltos? Cuando el portavoz sepa justificarlo, ¡tomamos notas!',
+        story: 'La comisión de fiestas compra 4 packs con 6 botellines de zumo cada uno. Además, un maestro aporta 9 botellines individuales que quedaban en el almacén. ¿Cuántos zumos hay listos para la merienda?',
+        questions: '«Colocad 4 regletas de 6. ¿Cuánto suman? Añadid la regleta azul (9). ¿Cuántas decenas completas podemos canjear?»',
+        math: 'Paso 1: 4 × 6 = 24 zumos. Paso 2: 24 + 9 = 33 zumos en total.',
+        extra: '🔥 Reto Extra: Si quisiéramos llegar exactamente a 50 zumos, ¿cuántos packs de 6 más tendríamos que comprar y cuántos zumos sueltos sobrarían?',
+        setup: [
+          { val: 6, x: 2, y: 2 }, { val: 6, x: 8, y: 2 }, { val: 6, x: 14, y: 2 }, { val: 6, x: 20, y: 2 },
+          { val: 9, x: 2, y: 4 }
+        ]
+      },
+      {
+        id: 'c_lap_4',
+        struct: 'lapices',
+        structName: 'Lápices al Centro',
+        title: 'Reparto de cromos y paquete incompleto',
+        tag: 'División con Resto y Complemento',
+        tagClass: 'tag-lapices',
+        instruction: '✋ LÁPICES EN EL CENTRO: Repartid con regletas entre 3 partes iguales. Mirad el hueco sobrante: ¿cuántos cromos faltan para que nadie se quede con las ganas?',
+        story: 'Tenemos 26 cromos para repartir a partes iguales entre 3 amigos. ¿Cuántos cromos recibe cada uno, cuántos sobran en la mesa y cuántos más necesitaríamos para darles uno más a todos?',
+        questions: '«El dividendo es 26 (dos de 10 y una de 6). ¿Cuántas regletas de 3 caben sin pasarse? ¿Qué pieza sobra? ¿Cuánto le falta a esa pieza para ser un 3?»',
+        math: '26 ÷ 3 = 8 cromos a cada uno (sobran 2). Para dar 1 más a cada uno hace falta 1 cromo más (2 + 1 = 3).',
+        extra: '🔥 Reto Extra: ¿Y si en lugar de 3 amigos fueran 4 amigos? Calculad cuántos cromos recibiría cada uno y cuánto sobraría en ese caso.',
+        setup: [
+          { val: 10, x: 2, y: 2 }, { val: 10, x: 12, y: 2 }, { val: 6, x: 22, y: 2 }
+        ]
+      },
+      {
+        id: 'c_fol_1',
+        struct: 'folio',
+        structName: 'Folio Giratorio',
+        title: 'La familia del 24: Rectángulo 4 × 6',
+        tag: 'Familias de Operaciones',
+        tagClass: 'tag-folio',
+        instruction: 'Pasa un único folio por orden: Alumno 1 escribe la suma repetida. | Alumno 2 escribe la multiplicación directa. | Alumno 3 aplica la propiedad conmutativa girando el bloque. | Alumno 4 deduce la división exacta.',
+        story: 'A partir del montaje de 4 regletas verdes oscuras (6), vuestro equipo debe escribir en cadena las 4 operaciones conectadas de esta familia matemática.',
+        questions: '«1) 6+6+6+6=24 | 2) 4×6=24 | 3) 6×4=24 | 4) 24÷4=6 o 24÷6=4.»',
+        math: 'Familia del 24: { 4×6=24 ; 6×4=24 ; 24÷4=6 ; 24÷6=4 }',
+        extra: '🔥 Reto Extra: ¿Qué otra pareja de regletas (que no sean el 4 y el 6) puede formar un rectángulo de 24? (Pista: probad con el 3 y el 8).',
+        setup: [
+          { val: 6, x: 2, y: 2 }, { val: 6, x: 8, y: 2 }, { val: 6, x: 14, y: 2 }, { val: 6, x: 20, y: 2 }
+        ]
+      },
+      {
+        id: 'c_fol_2',
+        struct: 'folio',
+        structName: 'Folio Giratorio',
+        title: 'La familia del 30: Bloque 5 × 6',
+        tag: 'Multiplicación y División',
+        tagClass: 'tag-folio',
+        instruction: 'Folio en marcha: Miembro 1 anota la suma de decenas/unidades. | Miembro 2 anota el producto de filas × columnas. | Miembro 3 invierte los factores. | Miembro 4 anota los dos repartos exactos.',
+        story: 'Montamos un tapiz con 5 regletas verdes oscuras de 6. Comprobad cómo se relaciona con 3 regletas naranjas de 10 y escribid la familia completa.',
+        questions: '«5 veces 6 son 30. ¿Es lo mismo que 6 veces 5? ¿Cuántos grupos de 5 caben en 30?»',
+        math: 'Familia del 30: { 5×6=30 ; 6×5=30 ; 30÷5=6 ; 30÷6=5 }',
+        extra: '🔥 Reto Extra: Si 5 × 6 = 30, ¿cuánto será 5 × 60? Explicad en una frase la regla de los ceros con decenas.',
+        setup: [
+          { val: 6, x: 2, y: 2 }, { val: 6, x: 8, y: 2 }, { val: 6, x: 14, y: 2 }, { val: 6, x: 20, y: 2 }, { val: 6, x: 26, y: 2 }
+        ]
+      },
+      {
+        id: 'c_fol_3',
+        struct: 'folio',
+        structName: 'Folio Giratorio',
+        title: 'El cuadrado perfecto de 36: 6 × 6',
+        tag: 'Cuadrados y Repartos',
+        tagClass: 'tag-folio',
+        instruction: 'Turno por turnos: Miembro 1 calcula el área cuadrangular. | Miembro 2 formula la multiplicación de factores iguales. | Miembro 3 busca otra multiplicación diferente que dé 36 (ej. 4 × 9). | Miembro 4 escribe las divisiones.',
+        story: 'Cuando apilamos 6 regletas verdes oscuras de 6 formamos un cuadrado geométrico perfecto de 36 unidades. Extraed toda su información matemática en el folio.',
+        questions: '«¿Por qué al girar este cuadrado sigue midiendo 6 × 6? ¿Qué otra forma rectangular da 36 unidades de superficie?»',
+        math: '6 × 6 = 36 ; 36 ÷ 6 = 6 | Alternativa: 4 × 9 = 36 ; 9 × 4 = 36 ; 36 ÷ 4 = 9',
+        extra: '🔥 Reto Extra: ¿Cuántas unidades habría que añadirle a este cuadrado de 36 para alcanzar la siguiente decena (40)? ¿Y para llegar al medio centenar (50)?',
+        setup: [
+          { val: 6, x: 2, y: 2 }, { val: 6, x: 2, y: 3 }, { val: 6, x: 2, y: 4 },
+          { val: 6, x: 2, y: 5 }, { val: 6, x: 2, y: 6 }, { val: 6, x: 2, y: 7 }
+        ]
+      },
+      {
+        id: 'c_fol_4',
+        struct: 'folio',
+        structName: 'Folio Giratorio',
+        title: 'Decenas exactas: La familia del 40',
+        tag: 'Relación Unidades-Decenas',
+        tagClass: 'tag-folio',
+        instruction: 'Folio circulando: Miembro 1 suma las cuatro decenas. | Miembro 2 multiplica 4 × 10. | Miembro 3 reparte 40 entre 4. | Miembro 4 reparte 40 entre 10.',
+        story: 'Colocamos 4 regletas naranjas seguidas. Representan cuatro decenas de diez. Escribid las cuatro expresiones que relacionan el 4, el 10 y el 40.',
+        questions: '«4 decenas son 40 unidades. 40 entre 10 nos da cuántas regletas naranjas tenemos. 40 entre 4 nos da el valor de cada grupo.»',
+        math: 'Familia del 40: { 4×10=40 ; 10×4=40 ; 40÷4=10 ; 40÷10=4 }',
+        extra: '🔥 Reto Extra: ¿Cuántas placas de 100 necesitaríais para reunir 10 trenes iguales a este de 40? (10 × 40 = 400).',
+        setup: [
+          { val: 10, x: 2, y: 2 }, { val: 10, x: 12, y: 2 }, { val: 10, x: 22, y: 2 }, { val: 10, x: 32, y: 2 }
+        ]
+      }
+    ];
+
+    const UNIT_SIZE = 38;
+    const workspace = document.getElementById('workspace');
+    const palette = document.getElementById('palette');
+    const ruler = document.getElementById('ruler');
+    const paintCanvas = document.getElementById('paint-canvas');
+    const overlaySvg = document.getElementById('overlay-svg');
+    const selectionBox = document.getElementById('selection-box');
+    const ctx = paintCanvas.getContext('2d');
+
+    const selectionBar = document.getElementById('selection-bar');
+    const selectedInfo = document.getElementById('selected-info');
+    const btnDesagrupar100 = document.getElementById('btn-desagrupar-100');
+    const canjeBar = document.getElementById('canje-bar');
+    const canjeCountText = document.getElementById('canje-count-text');
+    const canjeSumText = document.getElementById('canje-sum-text');
+    const btnDoCanje = document.getElementById('btn-do-canje');
+
+    const statusBadge = document.getElementById('status-badge');
+    const statusText = document.getElementById('status-text');
+
+    let rodsOnBoard = [];
+    let selectedRod = null;
+    let multiSelectedRods = [];
+    let idCounter = 1;
+    let showNumbers = true;
+    let showGrid = true;
+    
+    let currentMode = 'manipulate';
+    let currentColor = '#ef4444';
+    let isEraser = false;
+
+    function initRuler() {
+      ruler.innerHTML = '';
+      const units = Math.ceil(window.innerWidth / UNIT_SIZE);
+      for (let i = 1; i <= units; i++) {
+        const u = document.createElement('div');
+        u.className = 'ruler-unit';
+        u.textContent = i;
+        ruler.appendChild(u);
+      }
+    }
+
+    function initPalette() {
+      palette.innerHTML = '';
+      ROD_DEFINITIONS.forEach(def => {
+        const item = document.createElement('div');
+        item.className = 'palette-item';
+        item.title = `Regleta ${def.name} (${def.value})`;
+
+        const rodPreview = document.createElement('div');
+        rodPreview.className = `palette-rod ${def.className}`;
+        
+        if (def.isPlate) {
+          rodPreview.style.width = '28px';
+          rodPreview.style.height = '28px';
+        } else {
+          rodPreview.style.width = `${def.value * 22}px`;
+        }
+
+        const label = document.createElement('span');
+        label.className = 'palette-label';
+        label.textContent = def.isPlate ? '100 (C)' : def.value;
+
+        item.appendChild(rodPreview);
+        item.appendChild(label);
+
+        const handleSpawn = (e) => {
+          e.preventDefault();
+          spawnRod(def.value, 150, 150);
+        };
+        item.addEventListener('pointerdown', handleSpawn);
+
+        palette.appendChild(item);
+      });
+    }
+
+    function spawnRod(value, x, y, isVertical = false) {
+      const def = ROD_DEFINITIONS.find(d => d.value === value);
+      const rod = document.createElement('div');
+      const id = idCounter++;
+
+      rod.className = `rod ${def.className}`;
+      rod.dataset.id = id;
+      rod.dataset.value = value;
+      rod.dataset.vertical = isVertical ? 'true' : 'false';
+      if (def.isPlate) rod.dataset.isPlate = 'true';
+
+      const snappedX = Math.round(x / UNIT_SIZE) * UNIT_SIZE;
+      const snappedY = Math.max(UNIT_SIZE, Math.round(y / UNIT_SIZE) * UNIT_SIZE);
+      rod.dataset.x = snappedX;
+      rod.dataset.y = snappedY;
+
+      applyRodDimensions(rod, value, isVertical);
+      applyRodPosition(rod, snappedX, snappedY);
+
+      const span = document.createElement('span');
+      span.className = 'rod-text';
+      span.textContent = value === 100 ? '100 (C)' : value;
+      rod.appendChild(span);
+
+      workspace.appendChild(rod);
+      rodsOnBoard.push(rod);
+
+      selectSingleRod(rod);
+      attachRodDrag(rod);
+      updateSvgOverlays();
+      return rod;
+    }
+
+    function applyRodDimensions(rod, value, isVertical) {
+      if (value === 100) {
+        rod.style.width = `${10 * UNIT_SIZE}px`;
+        rod.style.height = `${10 * UNIT_SIZE}px`;
+      } else if (isVertical) {
+        rod.style.width = `${UNIT_SIZE}px`;
+        rod.style.height = `${value * UNIT_SIZE}px`;
+      } else {
+        rod.style.width = `${value * UNIT_SIZE}px`;
+        rod.style.height = `${UNIT_SIZE}px`;
+      }
+    }
+
+    function applyRodPosition(rod, x, y) {
+      rod.style.transform = `translate(${x}px, ${y}px)`;
+    }
+
+    function attachRodDrag(rod) {
+      let isDragging = false;
+      let startX = 0, startY = 0;
+      let initialLeft = 0, initialTop = 0;
+
+      rod.addEventListener('pointerdown', (e) => {
+        if (e.pointerType === 'pen') {
+          setInteractionMode('pen');
+          handlePointerDownOnCanvas(e);
+          return;
+        }
+
+        if (currentMode !== 'manipulate' || e.button !== 0) return;
+        e.stopPropagation();
+
+        selectSingleRod(rod);
+        isDragging = true;
+        startX = e.clientX;
+        startY = e.clientY;
+        initialLeft = parseInt(rod.dataset.x, 10);
+        initialTop = parseInt(rod.dataset.y, 10);
+        try { rod.setPointerCapture(e.pointerId); } catch (_) {}
+      });
+
+      rod.addEventListener('pointermove', (e) => {
+        if (!isDragging) return;
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+        rod.style.transform = `translate(${initialLeft + dx}px, ${initialTop + dy}px)`;
+      });
+
+      const endDrag = (e) => {
+        if (!isDragging) return;
+        isDragging = false;
+
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+
+        let snappedX = Math.max(0, Math.round((initialLeft + dx) / UNIT_SIZE) * UNIT_SIZE);
+        let snappedY = Math.max(UNIT_SIZE, Math.round((initialTop + dy) / UNIT_SIZE) * UNIT_SIZE);
+
+        if (rod.dataset.isPlate === 'true') {
+          const otherPlates = rodsOnBoard.filter(r => r !== rod && r.dataset.isPlate === 'true');
+          for (let p of otherPlates) {
+            const px = parseInt(p.dataset.x, 10);
+            const py = parseInt(p.dataset.y, 10);
+            if (Math.abs(snappedX - px) <= UNIT_SIZE * 2 && Math.abs(snappedY - py) <= UNIT_SIZE * 2) {
+              snappedX = px;
+              snappedY = py;
+              break;
+            }
+          }
+        }
+
+        rod.dataset.x = snappedX;
+        rod.dataset.y = snappedY;
+        applyRodPosition(rod, snappedX, snappedY);
+
+        try { rod.releasePointerCapture(e.pointerId); } catch (_) {}
+        updateSvgOverlays();
+      };
+
+      rod.addEventListener('pointerup', endDrag);
+      rod.addEventListener('pointercancel', endDrag);
+    }
+
+    function selectSingleRod(rod) {
+      clearMultiSelection();
+      if (selectedRod) selectedRod.classList.remove('selected');
+      selectedRod = rod;
+      if (rod) {
+        rod.classList.add('selected');
+        const val = parseInt(rod.dataset.value, 10);
+        const def = ROD_DEFINITIONS.find(d => d.value === val);
+        selectedInfo.textContent = `Regleta ${val} (${def.name})`;
+        selectionBar.classList.add('show');
+        
+        const btnRotate = document.getElementById('btn-rod-rotate');
+        if (val === 100) {
+          btnRotate.style.opacity = '0.4';
+          btnRotate.style.pointerEvents = 'none';
+          btnDesagrupar100.textContent = '💥 Desagrupar (10 decenas)';
+          btnDesagrupar100.style.display = 'inline-flex';
+        } else if (val === 10) {
+          btnRotate.style.opacity = '1';
+          btnRotate.style.pointerEvents = 'auto';
+          btnDesagrupar100.textContent = '💥 Romper en 10 blancas';
+          btnDesagrupar100.style.display = 'inline-flex';
+        } else {
+          btnRotate.style.opacity = '1';
+          btnRotate.style.pointerEvents = 'auto';
+          btnDesagrupar100.style.display = 'none';
+        }
+      } else {
+        selectionBar.classList.remove('show');
+        btnDesagrupar100.style.display = 'none';
+      }
+    }
+
+    // ACCIÓN: DESAGRUPAR 100 (EN 10 DECENAS) O 10 (EN 10 BLANCAS)
+    btnDesagrupar100.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (!selectedRod) return;
+
+      const val = parseInt(selectedRod.dataset.value, 10);
+      const isPlate = selectedRod.dataset.isPlate === 'true';
+      const isVert = selectedRod.dataset.vertical === 'true';
+      const baseX = parseInt(selectedRod.dataset.x, 10);
+      const baseY = parseInt(selectedRod.dataset.y, 10);
+
+      const target = selectedRod;
+      selectSingleRod(null);
+      rodsOnBoard = rodsOnBoard.filter(r => r !== target);
+      target.remove();
+
+      if (isPlate) {
+        // Desagrupar Placa 100 en 10 regletas de 10 apiladas
+        for (let i = 0; i < 10; i++) {
+          spawnRod(10, baseX, baseY + (i * UNIT_SIZE), false);
+        }
+      } else if (val === 10) {
+        // Desagrupar Regleta 10 en 10 cubitos blancos (1)
+        for (let i = 0; i < 10; i++) {
+          if (isVert) {
+            spawnRod(1, baseX, baseY + (i * UNIT_SIZE), false);
+          } else {
+            spawnRod(1, baseX + (i * UNIT_SIZE), baseY, false);
+          }
+        }
+      }
+
+      updateSvgOverlays();
+    });
+
+    let isSelectingBox = false;
+    let selStartX = 0, selStartY = 0;
+
+    workspace.addEventListener('pointerdown', (e) => {
+      if (e.pointerType === 'pen') {
+        setInteractionMode('pen');
+        handlePointerDownOnCanvas(e);
+        return;
+      }
+
+      if (currentMode === 'select' && e.button === 0) {
+        isSelectingBox = true;
+        const rect = workspace.getBoundingClientRect();
+        selStartX = e.clientX - rect.left;
+        selStartY = e.clientY - rect.top;
+
+        selectionBox.style.left = `${selStartX}px`;
+        selectionBox.style.top = `${selStartY}px`;
+        selectionBox.style.width = '0px';
+        selectionBox.style.height = '0px';
+        selectionBox.style.display = 'block';
+        try { workspace.setPointerCapture(e.pointerId); } catch(_) {}
+        return;
+      }
+
+      if (currentMode === 'manipulate' && (e.target === workspace || e.target === ruler)) {
+        selectSingleRod(null);
+        clearMultiSelection();
+      }
+    });
+
+    workspace.addEventListener('pointermove', (e) => {
+      if (!isSelectingBox) return;
+      const rect = workspace.getBoundingClientRect();
+      const curX = e.clientX - rect.left;
+      const curY = e.clientY - rect.top;
+
+      const left = Math.min(selStartX, curX);
+      const top = Math.min(selStartY, curY);
+      const width = Math.abs(curX - selStartX);
+      const height = Math.abs(curY - selStartY);
+
+      selectionBox.style.left = `${left}px`;
+      selectionBox.style.top = `${top}px`;
+      selectionBox.style.width = `${width}px`;
+      selectionBox.style.height = `${height}px`;
+
+      const boxRect = { left, top, right: left + width, bottom: top + height };
+      highlightRodsInRect(boxRect);
+    });
+
+    const endSelectionBox = (e) => {
+      if (!isSelectingBox) return;
+      isSelectingBox = false;
+      selectionBox.style.display = 'none';
+      try { workspace.releasePointerCapture(e.pointerId); } catch(_) {}
+
+      if (multiSelectedRods.length > 0) {
+        showCanjeBar();
+      } else {
+        canjeBar.classList.remove('show');
+      }
+    };
+
+    workspace.addEventListener('pointerup', endSelectionBox);
+    workspace.addEventListener('pointercancel', endSelectionBox);
+
+    function highlightRodsInRect(bRect) {
+      clearMultiSelection();
+      rodsOnBoard.forEach(rod => {
+        const rx = parseInt(rod.dataset.x, 10);
+        const ry = parseInt(rod.dataset.y, 10);
+        const rw = rod.offsetWidth;
+        const rh = rod.offsetHeight;
+
+        const overlaps = !(rx + rw < bRect.left || rx > bRect.right || ry + rh < bRect.top || ry > bRect.bottom);
+        if (overlaps) {
+          rod.classList.add('multi-selected');
+          multiSelectedRods.push(rod);
+        }
+      });
+    }
+
+    function clearMultiSelection() {
+      multiSelectedRods.forEach(r => r.classList.remove('multi-selected'));
+      multiSelectedRods = [];
+      canjeBar.classList.remove('show');
+    }
+
+    function showCanjeBar() {
+      if (selectedRod) selectSingleRod(null);
+      const count = multiSelectedRods.length;
+      const sum = multiSelectedRods.reduce((acc, r) => acc + parseInt(r.dataset.value, 10), 0);
+
+      canjeCountText.textContent = `${count} ${count === 1 ? 'regleta' : 'regletas'}`;
+      canjeSumText.textContent = `Suma: ${sum}`;
+
+      if (sum === 100) {
+        btnDoCanje.style.display = 'inline-flex';
+        btnDoCanje.textContent = '✨ Canjear por Placa 100';
+      } else {
+        btnDoCanje.style.display = 'none';
+      }
+
+      canjeBar.classList.add('show');
+    }
+
+    btnDoCanje.addEventListener('click', () => {
+      if (multiSelectedRods.length === 0) return;
+
+      let avgX = 0, avgY = 0;
+      multiSelectedRods.forEach(r => {
+        avgX += parseInt(r.dataset.x, 10);
+        avgY += parseInt(r.dataset.y, 10);
+      });
+      avgX = avgX / multiSelectedRods.length;
+      avgY = avgY / multiSelectedRods.length;
+
+      multiSelectedRods.forEach(r => {
+        rodsOnBoard = rodsOnBoard.filter(item => item !== r);
+        r.remove();
+      });
+      clearMultiSelection();
+
+      spawnRod(100, avgX, avgY);
+      setInteractionMode('manipulate');
+    });
+
+    document.getElementById('btn-delete-selection').addEventListener('click', () => {
+      multiSelectedRods.forEach(r => {
+        rodsOnBoard = rodsOnBoard.filter(item => item !== r);
+        r.remove();
+      });
+      clearMultiSelection();
+      updateSvgOverlays();
+      setInteractionMode('manipulate');
+    });
+
+    document.getElementById('btn-cancel-selection').addEventListener('click', () => {
+      clearMultiSelection();
+      setInteractionMode('manipulate');
+    });
+
+    document.getElementById('btn-rod-delete').addEventListener('click', () => {
+      if (!selectedRod) return;
+      rodsOnBoard = rodsOnBoard.filter(r => r !== selectedRod);
+      selectedRod.remove();
+      selectSingleRod(null);
+      updateSvgOverlays();
+    });
+
+    document.getElementById('btn-rod-duplicate').addEventListener('click', () => {
+      if (!selectedRod) return;
+      const val = parseInt(selectedRod.dataset.value, 10);
+      const isVert = selectedRod.dataset.vertical === 'true';
+      const x = parseInt(selectedRod.dataset.x, 10) + (val === 100 ? 0 : UNIT_SIZE);
+      const y = parseInt(selectedRod.dataset.y, 10) + (val === 100 ? 0 : UNIT_SIZE);
+      spawnRod(val, x, y, isVert);
+    });
+
+    document.getElementById('btn-rod-rotate').addEventListener('click', () => {
+      if (!selectedRod) return;
+      const val = parseInt(selectedRod.dataset.value, 10);
+      if (val === 100) return;
+      const isVert = selectedRod.dataset.vertical !== 'true';
+      selectedRod.dataset.vertical = isVert ? 'true' : 'false';
+      applyRodDimensions(selectedRod, val, isVert);
+      updateSvgOverlays();
+    });
+
+    function updateSvgOverlays() {
+      overlaySvg.innerHTML = '';
+      document.querySelectorAll('.plate-counter-badge').forEach(b => b.remove());
+
+      const plateStacks = {};
+      const plates = rodsOnBoard.filter(r => r.dataset.isPlate === 'true');
+
+      plates.forEach(p => {
+        const key = `${p.dataset.x},${p.dataset.y}`;
+        if (!plateStacks[key]) plateStacks[key] = [];
+        plateStacks[key].push(p);
+      });
+
+      Object.keys(plateStacks).forEach(key => {
+        const stack = plateStacks[key];
+        const count = stack.length;
+        const totalVal = count * 100;
+        const topPlate = stack[stack.length - 1];
+
+        stack.forEach((p, idx) => {
+          const offset = idx * 3;
+          p.style.zIndex = 15 + idx;
+          p.style.transform = `translate(${parseInt(p.dataset.x, 10) + offset}px, ${parseInt(p.dataset.y, 10) - offset}px)`;
+          p.style.boxShadow = `${-idx*2}px ${idx*2 + 4}px 10px rgba(0,0,0,0.35)`;
+        });
+
+        const badge = document.createElement('div');
+        badge.className = 'plate-counter-badge';
+        badge.innerHTML = `
+          <span>📦 ${count} ${count === 1 ? 'Centena' : 'Centenas'}</span>
+          <span class="badge-val">${totalVal}</span>
+        `;
+        topPlate.appendChild(badge);
+      });
+
+      const horizontalRods = rodsOnBoard.filter(r => r.dataset.vertical === 'false' && r.dataset.isPlate !== 'true');
+      if (horizontalRods.length === 0) return;
+
+      const rows = {};
+      horizontalRods.forEach(r => {
+        const y = parseInt(r.dataset.y, 10);
+        if (!rows[y]) rows[y] = [];
+        rows[y].push({
+          el: r,
+          x: parseInt(r.dataset.x, 10),
+          len: parseInt(r.dataset.value, 10) * UNIT_SIZE,
+          val: parseInt(r.dataset.value, 10)
+        });
+      });
+
+      const trains = [];
+      Object.keys(rows).forEach(yStr => {
+        const y = parseInt(yStr, 10);
+        const list = rows[y].sort((a, b) => a.x - b.x);
+
+        let currentTrain = [list[0]];
+        for (let i = 1; i < list.length; i++) {
+          const prev = currentTrain[currentTrain.length - 1];
+          if (list[i].x === prev.x + prev.len) {
+            currentTrain.push(list[i]);
+          } else {
+            if (currentTrain.length > 1) trains.push({ y, rods: currentTrain });
+            currentTrain = [list[i]];
+          }
+        }
+        if (currentTrain.length > 1) trains.push({ y, rods: currentTrain });
+      });
+
+      trains.forEach(t => {
+        const startX = t.rods[0].x;
+        const totalLen = t.rods.reduce((acc, r) => acc + r.len, 0);
+        const sumVal = t.rods.reduce((acc, r) => acc + r.val, 0);
+        const yPos = t.y - 8;
+
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', `M ${startX} ${yPos} L ${startX + totalLen} ${yPos}`);
+        path.setAttribute('stroke', '#0284c7');
+        path.setAttribute('stroke-width', '2.5');
+        overlaySvg.appendChild(path);
+
+        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.setAttribute('x', startX + totalLen / 2);
+        text.setAttribute('y', yPos - 6);
+        text.setAttribute('text-anchor', 'middle');
+        text.setAttribute('fill', '#0369a1');
+        text.setAttribute('font-weight', '800');
+        text.setAttribute('font-size', '13px');
+        const expr = t.rods.map(r => r.val).join(' + ');
+        text.textContent = `[ ${expr} = ${sumVal} ]`;
+        overlaySvg.appendChild(text);
+      });
+
+      const yCoords = Object.keys(rows).map(Number).sort((a,b) => a - b);
+      if (yCoords.length >= 2) {
+        const r1 = rows[yCoords[0]];
+        const r2 = rows[yCoords[1]];
+        const r1Left = Math.min(...r1.map(r => r.x));
+        const r2Left = Math.min(...r2.map(r => r.x));
+
+        if (Math.abs(r1Left - r2Left) < 5) {
+          const r1Right = Math.max(...r1.map(r => r.x + r.len));
+          const r2Right = Math.max(...r2.map(r => r.x + r.len));
+          const diff = Math.abs(r1Right - r2Right);
+
+          if (diff >= UNIT_SIZE) {
+            const shortRowY = r1Right < r2Right ? yCoords[0] : yCoords[1];
+            const startGapX = Math.min(r1Right, r2Right);
+            const gapUnits = Math.round(diff / UNIT_SIZE);
+
+            const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            rect.setAttribute('x', startGapX);
+            rect.setAttribute('y', shortRowY);
+            rect.setAttribute('width', diff);
+            rect.setAttribute('height', UNIT_SIZE);
+            rect.setAttribute('fill', 'rgba(245, 158, 11, 0.25)');
+            rect.setAttribute('stroke', '#f59e0b');
+            rect.setAttribute('stroke-dasharray', '5,5');
+            rect.setAttribute('stroke-width', '2');
+            overlaySvg.appendChild(rect);
+
+            const gapText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            gapText.setAttribute('x', startGapX + diff / 2);
+            gapText.setAttribute('y', shortRowY + UNIT_SIZE / 2 + 5);
+            gapText.setAttribute('text-anchor', 'middle');
+            gapText.setAttribute('fill', '#b45309');
+            gapText.setAttribute('font-weight', '800');
+            gapText.setAttribute('font-size', '13px');
+            gapText.textContent = `? = ${gapUnits}`;
+            overlaySvg.appendChild(gapText);
+          }
+        }
+      }
+    }
+
+    function resizeCanvas() {
+      const tempCanvas = document.createElement('canvas');
+      tempCanvas.width = paintCanvas.width;
+      tempCanvas.height = paintCanvas.height;
+      const tempCtx = tempCanvas.getContext('2d');
+      if (paintCanvas.width > 0 && paintCanvas.height > 0) {
+        tempCtx.drawImage(paintCanvas, 0, 0);
+      }
+
+      paintCanvas.width = workspace.clientWidth || window.innerWidth;
+      paintCanvas.height = workspace.clientHeight || (window.innerHeight - 150);
+
+      if (tempCanvas.width > 0 && tempCanvas.height > 0) {
+        ctx.drawImage(tempCanvas, 0, 0);
+      }
+    }
+
+    window.addEventListener('resize', () => {
+      initRuler();
+      resizeCanvas();
+    });
+
+    let isDrawing = false;
+
+    function handlePointerDownOnCanvas(e) {
+      isDrawing = true;
+      const rect = paintCanvas.getBoundingClientRect();
+      const currentX = e.clientX - rect.left;
+      const currentY = e.clientY - rect.top;
+
+      ctx.beginPath();
+      ctx.moveTo(currentX, currentY);
+
+      const useEraser = isEraser || e.pointerType === 'eraser';
+
+      if (useEraser) {
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.lineWidth = 36;
+      } else {
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.strokeStyle = currentColor;
+        ctx.lineWidth = currentColor.startsWith('rgba') ? 18 : 3.5;
+      }
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+
+      ctx.lineTo(currentX, currentY);
+      ctx.stroke();
+
+      try { paintCanvas.setPointerCapture(e.pointerId); } catch (_) {}
+    }
+
+    paintCanvas.addEventListener('pointerdown', (e) => {
+      if (currentMode !== 'pen' && e.pointerType !== 'pen' && e.pointerType !== 'eraser') return;
+      if (currentMode !== 'pen' && (e.pointerType === 'pen' || e.pointerType === 'eraser')) {
+        setInteractionMode('pen');
+      }
+      handlePointerDownOnCanvas(e);
+    });
+
+    paintCanvas.addEventListener('pointermove', (e) => {
+      if (currentMode !== 'pen' || !isDrawing) return;
+      const rect = paintCanvas.getBoundingClientRect();
+      const useEraser = isEraser || e.pointerType === 'eraser';
+
+      if (useEraser) {
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.lineWidth = 36;
+      } else {
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.strokeStyle = currentColor;
+        ctx.lineWidth = currentColor.startsWith('rgba') ? 18 : 3.5;
+      }
+
+      ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+      ctx.stroke();
+    });
+
+    const stopDrawing = (e) => {
+      if (!isDrawing) return;
+      isDrawing = false;
+      ctx.closePath();
+      try { paintCanvas.releasePointerCapture(e.pointerId); } catch (_) {}
+    };
+
+    paintCanvas.addEventListener('pointerup', stopDrawing);
+    paintCanvas.addEventListener('pointercancel', stopDrawing);
+
+    const btnModeManipulate = document.getElementById('btn-mode-manipulate');
+    const btnModeSelect = document.getElementById('btn-mode-select');
+    const btnModePen = document.getElementById('btn-mode-pen');
+    const btnPenEraser = document.getElementById('btn-pen-eraser');
+
+    function setInteractionMode(mode) {
+      currentMode = mode;
+      selectSingleRod(null);
+      if (mode !== 'select') clearMultiSelection();
+
+      paintCanvas.classList.toggle('drawing-active', mode === 'pen');
+      btnModeManipulate.classList.toggle('active', mode === 'manipulate');
+      btnModeSelect.classList.toggle('active', mode === 'select');
+      btnModePen.classList.toggle('active', mode === 'pen');
+
+      if (mode === 'manipulate') {
+        statusBadge.className = 'status-badge';
+        statusText.textContent = 'Modo Regletas: Manipulación Activa';
+        btnPenEraser.classList.remove('active');
+      } else if (mode === 'select') {
+        statusBadge.className = 'status-badge select-mode';
+        statusText.textContent = 'Modo Enmarcar: Dibuja un recuadro para seleccionar';
+        btnPenEraser.classList.remove('active');
+      } else if (mode === 'pen') {
+        statusBadge.className = 'status-badge draw-mode';
+        statusText.textContent = isEraser ? 'Modo Pizarra: Borrando Tinta' : 'Modo Pizarra: Anotando con Lápiz';
+      }
+    }
+
+    btnModeManipulate.addEventListener('click', () => setInteractionMode('manipulate'));
+    btnModeSelect.addEventListener('click', () => setInteractionMode('select'));
+
+    btnModePen.addEventListener('click', () => {
+      isEraser = false;
+      btnPenEraser.classList.remove('active');
+      setInteractionMode('pen');
+    });
+
+    document.querySelectorAll('.pen-opt').forEach(opt => {
+      opt.addEventListener('click', () => {
+        document.querySelectorAll('.pen-opt').forEach(o => o.classList.remove('active'));
+        btnPenEraser.classList.remove('active');
+        opt.classList.add('active');
+        currentColor = opt.dataset.color;
+        isEraser = false;
+        setInteractionMode('pen');
+      });
+    });
+
+    btnPenEraser.addEventListener('click', () => {
+      isEraser = true;
+      document.querySelectorAll('.pen-opt').forEach(o => o.classList.remove('active'));
+      btnPenEraser.classList.add('active');
+      setInteractionMode('pen');
+    });
+
+    document.getElementById('btn-pen-clear').addEventListener('click', () => {
+      ctx.save();
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, paintCanvas.width, paintCanvas.height);
+      ctx.restore();
+    });
+
+    const btnFullscreen = document.getElementById('btn-fullscreen');
+    btnFullscreen.addEventListener('click', () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+        btnFullscreen.textContent = '✖ Salir Pantalla Completa';
+      } else {
+        document.exitFullscreen().catch(() => {});
+        btnFullscreen.textContent = '⛶ Pantalla Completa PDI';
+      }
+    });
+
+    document.addEventListener('fullscreenchange', () => {
+      if (!document.fullscreenElement) {
+        btnFullscreen.textContent = '⛶ Pantalla Completa PDI';
+      }
+    });
+
+    document.getElementById('btn-clear-board').addEventListener('click', () => {
+      rodsOnBoard.forEach(r => r.remove());
+      rodsOnBoard = [];
+      selectSingleRod(null);
+      clearMultiSelection();
+      ctx.save();
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, paintCanvas.width, paintCanvas.height);
+      ctx.restore();
+      updateSvgOverlays();
+    });
+
+    const btnToggleNumbers = document.getElementById('btn-toggle-numbers');
+    const labelNumbers = document.getElementById('label-numbers');
+    btnToggleNumbers.addEventListener('click', () => {
+      showNumbers = !showNumbers;
+      document.body.classList.toggle('hide-numbers', !showNumbers);
+      labelNumbers.textContent = showNumbers ? 'Ocultar Números' : 'Mostrar Números';
+      btnToggleNumbers.classList.toggle('active', !showNumbers);
+    });
+
+    const btnToggleGrid = document.getElementById('btn-toggle-grid');
+    btnToggleGrid.addEventListener('click', () => {
+      showGrid = !showGrid;
+      workspace.style.backgroundImage = showGrid 
+        ? `linear-gradient(to right, var(--grid-line) 1px, transparent 1px), linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px)`
+        : 'none';
+      ruler.style.display = showGrid ? 'flex' : 'none';
+      btnToggleGrid.classList.toggle('active', showGrid);
+    });
+
+    const modalSituations = document.getElementById('modal-situations');
+    const situationsList = document.getElementById('situations-list');
+    const filterButtons = document.querySelectorAll('[data-filter]');
+
+    function renderSituations(filter = 'all') {
+      situationsList.innerHTML = '';
+      const filtered = filter === 'all' 
+        ? SITUACIONES_DATA 
+        : SITUACIONES_DATA.filter(s => s.op === filter);
+
+      filtered.forEach((sit) => {
+        const card = document.createElement('div');
+        card.className = 'situation-card';
+        card.innerHTML = `
+          <div class="situation-header">
+            <div class="situation-title-block">
+              <span class="level-badge">${sit.level}</span>
+              <span class="situation-title">${sit.title}</span>
+            </div>
+            <div class="situation-tags">
+              <span class="situation-tag ${sit.tagClass}">${sit.tag}</span>
+            </div>
+          </div>
+          <p class="situation-story">${sit.story}</p>
+          <div class="situation-questions">
+            <strong>Pregunta de aula en PDI:</strong> ${sit.questions}
+          </div>
+          <div class="card-footer-actions">
+            <span class="situation-math">${sit.math}</span>
+            <button class="btn-load-situation" onclick="loadSituation('${sit.id}')">
+              🚀 Cargar en el tapete
+            </button>
+          </div>
+        `;
+        situationsList.appendChild(card);
+      });
+    }
+
+    document.getElementById('btn-open-situations').addEventListener('click', () => {
+      renderSituations('all');
+      modalSituations.classList.add('open');
+    });
+
+    document.getElementById('btn-close-modal').addEventListener('click', () => {
+      modalSituations.classList.remove('open');
+    });
+
+    filterButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderSituations(btn.dataset.filter);
+      });
+    });
+
+    window.loadSituation = function(situationId) {
+      const sit = SITUACIONES_DATA.find(s => s.id === situationId);
+      if (!sit) return;
+
+      modalSituations.classList.remove('open');
+      rodsOnBoard.forEach(r => r.remove());
+      rodsOnBoard = [];
+      selectSingleRod(null);
+      clearMultiSelection();
+      ctx.save();
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, paintCanvas.width, paintCanvas.height);
+      ctx.restore();
+
+      sit.setup.forEach(item => {
+        spawnRod(item.val, item.x * UNIT_SIZE, item.y * UNIT_SIZE, item.vertical || false);
+      });
+
+      setInteractionMode('manipulate');
+      updateSvgOverlays();
+    };
+
+    const modalCoop = document.getElementById('modal-coop');
+    const coopList = document.getElementById('coop-list');
+    const coopFilterButtons = document.querySelectorAll('[data-coop-filter]');
+
+    function renderCoopChallenges(filter = 'all') {
+      coopList.innerHTML = '';
+      const filtered = filter === 'all' 
+        ? RETOS_COOP_DATA 
+        : RETOS_COOP_DATA.filter(c => c.struct === filter);
+
+      filtered.forEach((ret) => {
+        const card = document.createElement('div');
+        card.className = 'coop-card';
+        card.innerHTML = `
+          <div class="situation-header">
+            <div class="situation-title-block">
+              <span class="level-badge" style="background: #d1fae5; color: #065f46;">${ret.structName}</span>
+              <span class="situation-title">${ret.title}</span>
+            </div>
+            <div class="situation-tags">
+              <span class="situation-tag ${ret.tagClass}">${ret.tag}</span>
+            </div>
+          </div>
+          
+          <div class="coop-instruction-box">
+            <strong>Consigna de Equipo:</strong> ${ret.instruction}
+          </div>
+
+          <p class="situation-story">${ret.story}</p>
+
+          <div class="situation-questions" style="border-left-color: #059669;">
+            <strong style="color: #047857;">Guía de argumentación:</strong> ${ret.questions}
+          </div>
+
+          <details class="extra-challenge-details">
+            <summary>🔥 Reto Extra / Ampliación (Para equipos rápidos)</summary>
+            <div class="extra-challenge-content">
+              ${ret.extra}
+            </div>
+          </details>
+
+          <div class="card-footer-actions">
+            <span class="situation-math">${ret.math}</span>
+            <button class="btn-load-situation btn-load-coop" onclick="loadCoopChallenge('${ret.id}')">
+              🚀 Montar reto en el tapete
+            </button>
+          </div>
+        `;
+        coopList.appendChild(card);
+      });
+    }
+
+    document.getElementById('btn-open-coop').addEventListener('click', () => {
+      renderCoopChallenges('all');
+      modalCoop.classList.add('open');
+    });
+
+    document.getElementById('btn-close-coop-modal').addEventListener('click', () => {
+      modalCoop.classList.remove('open');
+    });
+
+    coopFilterButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        coopFilterButtons.forEach(b => b.classList.remove('active-coop'));
+        btn.classList.add('active-coop');
+        renderCoopChallenges(btn.dataset.coopFilter);
+      });
+    });
+
+    window.loadCoopChallenge = function(challengeId) {
+      const ret = RETOS_COOP_DATA.find(c => c.id === challengeId);
+      if (!ret) return;
+
+      modalCoop.classList.remove('open');
+      rodsOnBoard.forEach(r => r.remove());
+      rodsOnBoard = [];
+      selectSingleRod(null);
+      clearMultiSelection();
+      ctx.save();
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, paintCanvas.width, paintCanvas.height);
+      ctx.restore();
+
+      ret.setup.forEach(item => {
+        spawnRod(item.val, item.x * UNIT_SIZE, item.y * UNIT_SIZE, item.vertical || false);
+      });
+
+      setInteractionMode('manipulate');
+      updateSvgOverlays();
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initRuler();
+      initPalette();
+      resizeCanvas();
+    });
+
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+      initRuler();
+      initPalette();
+      resizeCanvas();
+    }
+  </script>
+</body>
+</html>
